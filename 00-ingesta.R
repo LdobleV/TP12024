@@ -13,3 +13,4 @@ names(datos)[2] = "BARRIO"
 
 # Ver los datos como planilla
 View(datos)
+
