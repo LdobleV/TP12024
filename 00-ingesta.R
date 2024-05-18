@@ -1,18 +1,15 @@
-# Instalo los paquetes necesarios (si aún no los tengo instalados)
-# install.packages("googledrive")
-# install.packages("readxl")
+library("readxl")
+library("openxlsx")
 
-# Descargo el archivo mediante su id de google drive
-# El link de los archivos de drive tiene esta forma:
-# https://docs.google.com/spreadsheets/d/16_zhdrZIW72I45SHIsVkGv-KYQw1oeup
-# El id de esta hoja de cálculo es "16_zhdrZIW72I45SHIsVkGv-KYQw1oeup"
-googledrive::drive_download(as_id("16_zhdrZIW72I45SHIsVkGv-KYQw1oeup"), 
-														overwrite = T)
 
-# Cargo el archivo como .xlsx
-datos <- readxl::read_excel("arbol.xlsx", 
-														col_names = FALSE, 
-														skip = 3)
+rango_de_lectura <- "B3:DN1125"
 
-# Veo la estructura del dataset
-str(datos)
+# Cargo el archivo como .xlsx con el rango de lectura indicado
+datos <- read_excel("Datos_LP.xlsx", range=rango_de_lectura)
+
+#Por como esta hecha la tabla se pierden los primeros valores de las columnas 1 y 2 asi que los pongo a mano
+names(datos)[1] = "PROVINCIA"
+names(datos)[2] = "BARRIO"
+
+# Ver los datos como planilla
+View(datos)
