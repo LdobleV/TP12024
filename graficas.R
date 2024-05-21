@@ -88,14 +88,21 @@ conteo_df <- data.frame(Variable = c("No", "Sí"), Frecuencia = conteos)
 # Calcular porcentajes
 conteo_df$Porcentaje <- round((conteo_df$Frecuencia / sum(conteo_df$Frecuencia)) * 100, 1)
 
+#--Aca tambien probe cosas con fuentes y para que se vea mejor no se---
+
 # Crear la gráfica de torta
 ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = Variable)) +
-  geom_bar(stat = "identity", width = 1) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
   coord_polar("y") +
   theme_void() +
   labs(title = "Preséncia de plagas en las casas") +
-  geom_text(aes(label = paste0(Porcentaje, "%")), 
-            position = position_stack(vjust = 0.5))
+  theme(legend.position = "") +
+  theme(text = element_text(family = "Trebuchet MS")) +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_text(aes(label = paste0(Variable)), 
+            position = position_stack(vjust = 0.5),
+            size = 6) +
+  scale_fill_brewer(palette="Set1")
 
 ###6 Tipos de plagas en casas con plagas###
 
