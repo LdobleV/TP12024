@@ -1,7 +1,15 @@
-
 library(readxl)
 library(ggplot2)
 library(dplyr)
+library(extrafont)
+
+#Cuidado con esto Eliseo capaz tu compu explota
+font_import()
+loadfonts(device = "win")
+
+#Veo las fuentes que importe
+fonts()
+
 ###1 Grafica cercania a basurales###
 
 # Especificar los valores de interés
@@ -13,12 +21,15 @@ conteos <- sapply(valores_interes, function(valor) sum(datos$`¿Hay basurales ce
 # Convertir el resultado a un data frame
 conteo_df <- data.frame(valores = valores_interes, Frecuencia = conteos)
 
+#------ EN ESTE GRAFICO PROBE LAS FUENTES ----------#
+
 # Crear la gráfica de barras
 ggplot(conteo_df, aes(x = valores, y = Frecuencia)) +
   geom_bar(stat = "identity", fill = "skyblue") +
-  theme_minimal() +
+  theme_classic() +
+  theme(text = element_text(family = "Trebuchet MS"))+
   labs(title = "Frecuencia de Apariciones por cercania a basurales",
-       x = "cercania a basurales",
+       x = "Cercanía a basurales",
        y = "Frecuencia")
 
 ###2 Grafico Frecuencia de recolección de residuos###
@@ -37,7 +48,7 @@ ggplot(conteo_df, aes(x = valores, y = Frecuencia)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   theme_minimal() +
   labs(title = "Frecuencia de tiempo de recoleccion de basura", 
-       x = "recolecciones por semana",
+       x = "Recolecciones por semana",
        y = "Frecuencia")
 
 ###3 Tipo de desagüe###
@@ -63,21 +74,36 @@ ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = Variable)) +
   geom_text(aes(label = paste0(Porcentaje, "%")), 
             position = position_stack(vjust = 0.5))
 
-###4 tipo de plagas###
+###5 Presencia de plagas en casas###
+
+#Movi lo de aca a manipulacion, pq no se, va ahi
+
+ 
+#Incializo el vector que almacena los conteos de casas con plagas vs sin plagas
+conteos <- sapply(c("No", "Sí"), function(valor) sum(datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?` == valor))
+
+# Convertir el resultado a un data frame
+conteo_df <- data.frame(Variable = c("No", "Sí"), Frecuencia = conteos)
+
+# Calcular porcentajes
+conteo_df$Porcentaje <- round((conteo_df$Frecuencia / sum(conteo_df$Frecuencia)) * 100, 1)
+
+# Crear la gráfica de torta
+ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = Variable)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  theme_void() +
+  labs(title = "Preséncia de plagas en las casas") +
+  geom_text(aes(label = paste0(Porcentaje, "%")), 
+            position = position_stack(vjust = 0.5))
+
+###6 Tipos de plagas en casas con plagas###
 
 #Tipo de plaga: categórica nominal: bien, faltó explicitar que es de respuesta múltiple. Gráfico de sectores: no es correcto,
 #ya que la suma de las frecuencias de las categorías excede el 100% (justamente por ser de respuesta múltiple). Los gráficos de barras pueden representar las frecuencias porcentuales también.
 
-datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?`[is.na(datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?`)] <- "no"        
-
-datos$`¿Cuáles plagas?`[is.na(datos$`¿Cuáles plagas?`)] <- "no"
-datos$...93[is.na(datos$...93)] <- "no"
-datos$...94[is.na(datos$...94)] <- "no"
-
- 
-
 # Calcular el porcentaje de viviendas con plagas
-porcentaje_plagas <- sum(datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?` == "Sí") / nrow(datos) * 100
+#porcentaje_plagas <- sum(datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?` == "Sí") / nrow(datos) * 100
 
 # Calcular el porcentaje de viviendas con cucarachas
 porcentaje_cucarachas <- sum(datos$`¿Cuáles plagas?` == "Cucarachas") / nrow(datos) * 100
@@ -90,11 +116,12 @@ porcentaje_ratas <- sum(datos$...94 == "Ratas") / nrow(datos) * 100
 
 # Crear un data frame con los resultados
 resultados <- data.frame(
-  Tipo = c("Plagas", "Cucarachas", "Mosquitos", "Ratas"),
-  Porcentaje = c(porcentaje_plagas, porcentaje_cucarachas, porcentaje_mosquitos, porcentaje_ratas)
+  Tipo = c("Cucarachas", "Mosquitos", "Ratas"),
+  Porcentaje = c(porcentaje_cucarachas, porcentaje_mosquitos, porcentaje_ratas)
 )
 
-# Crear la gráfica de barras
+
+# Crear la gráfica de barras del porcentaje de presencia de cada plaga
 ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
   geom_bar(stat = "identity",color = "black", fill = "red") +
   theme_minimal() +

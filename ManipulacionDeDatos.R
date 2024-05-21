@@ -1,3 +1,5 @@
+#Este archivo debe correrse luego de la ingesta de datos, modifica la tabla a conveniencia
+
 install.packages("dplyr")
 
 library(dplyr)
@@ -7,29 +9,19 @@ library(dplyr)
 # Fijo el dataset
 attach(datos)
 
-conditions <- c("Desagüe a red cloacal pública",
-                "A pozo negro/ciego",
-                "Desagüe a red cloacal informal/vecinal",
-                "No sabe")
+provincias <- c('Misiones', 'Formosa', 'Jujuy', 'Tucumán', 'Santiago', 'Corrientes', 'Chaco')
 
-replacement_values <- c("CP", "PN", "CI", "NS")
+#Filtro solo las provincias objetivo de estudio
+datos <- datos[datos$PROVINCIA %in% provincias, ]
 
-datos$`¿Qué tipo de desagüe posee la vivienda?` <- 
-  replace(datos$`¿Qué tipo de desagüe posee la vivienda?`, 
-          datos$`¿Qué tipo de desagüe posee la vivienda?` %in% conditions, 
-          replacement_values)
-
-conditions <- c("Sí, a menos de 500 metros",
-                "Sí, a más de 500 metros y menos de 2 kilómetros")
-
-replacement_values <- c("500", "500-2000")
-
-datos$`¿Hay basurales cerca de su vivienda?` <- 
-  replace(datos$`¿Hay basurales cerca de su vivienda?`, 
-          datos$`¿Hay basurales cerca de su vivienda?` %in% conditions, 
-          replacement_values)
-
+#Asi se ve bien en que columna esta cada plaga y no casillas vacias (Las reemplazo con un "no")
 
 names(datos)[92] = "Cucarachas?"
 names(datos)[93] = "Mosquitos?"
 names(datos)[94] = "Ratas?"
+
+datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?`[is.na(datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?`)] <- "no"        
+
+datos$`¿Cuáles plagas?`[is.na(datos$`¿Cuáles plagas?`)] <- "no"
+datos$...93[is.na(datos$...93)] <- "no"
+datos$...94[is.na(datos$...94)] <- "no"
