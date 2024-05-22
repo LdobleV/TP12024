@@ -9,6 +9,7 @@ library(dplyr)
 # Fijo el dataset
 attach(datos)
 
+
 provincias <- c('Misiones', 'Formosa', 'Jujuy', 'Tucumán', 'Santiago', 'Corrientes', 'Chaco')
 
 #Filtro solo las provincias objetivo de estudio
@@ -22,6 +23,6 @@ names(datos)[94] = "Ratas?"
 
 datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?`[is.na(datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?`)] <- "no"        
 
-datos$`¿Cuáles plagas?`[is.na(datos$`¿Cuáles plagas?`)] <- "no"
-datos$...93[is.na(datos$...93)] <- "no"
-datos$...94[is.na(datos$...94)] <- "no"
+datos$`Cucarachas?`[is.na(datos$`Cucarachas?`)] <- "no"
+datos$`Mosquitos?`[is.na(datos$`Mosquitos?`)] <- "no"
+datos$`Ratas?`[is.na(datos$`Ratas?`)] <- "no"
