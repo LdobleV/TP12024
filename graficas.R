@@ -14,6 +14,7 @@ fonts()
 
 # Especificar los valores de interés
 valores_interes <- c("No", "Sí, a menos de 500 metros", "Sí, a más de 500 metros y menos de 2 kilómetros")
+valores_interes <- factor(valores_interes, levels = valores_interes)
 
 # Inicializar un vector para almacenar los conteos
 conteos <- sapply(valores_interes, function(valor) sum(datos$`¿Hay basurales cerca de su vivienda?` == valor))
@@ -24,9 +25,9 @@ conteo_df <- data.frame(valores = valores_interes, Frecuencia = conteos)
 #------ EN ESTE GRAFICO PROBE LAS FUENTES ----------#
 
 # Crear la gráfica de barras
-ggplot(conteo_df, aes(x = valores, y = Frecuencia)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
-  theme_classic() +
+ggplot(conteo_df, aes(x = valores, y = Frecuencia, order = valores)) +
+  geom_bar(stat = "identity", fill = "skyblue", color = "black", size = 0.5) +
+  theme_bw() +
   theme(text = element_text(family = "Trebuchet MS"))+
   labs(title = "Frecuencia de Apariciones por cercania a basurales",
        x = "Cercanía a basurales",
@@ -36,6 +37,7 @@ ggplot(conteo_df, aes(x = valores, y = Frecuencia)) +
 
 # Especificar los valores de interés
 valores_interes <- c("No hay servicio de recolección municipal", "Una vez a la semana", "Entre 2 y 4 veces a la semana", "Al menos 5 veces a la semana")
+valores_interes <- factor(valores_interes, levels = valores_interes)
 
 # Inicializar un vector para almacenar los conteos
 conteos <- sapply(valores_interes, function(valor) sum(datos$`¿Con qué frecuencia el Municipio recolecta los residuos en sus inmediaciones?` == valor))
@@ -45,8 +47,8 @@ conteo_df <- data.frame(valores = valores_interes, Frecuencia = conteos)
 
 # Crear la gráfica de barras
 ggplot(conteo_df, aes(x = valores, y = Frecuencia)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
-  theme_minimal() +
+  geom_bar(stat = "identity", fill = "skyblue", color = "black", size = 0.5) +
+  theme_bw() +
   labs(title = "Frecuencia de tiempo de recoleccion de basura", 
        x = "Recolecciones por semana",
        y = "Frecuencia")
@@ -72,7 +74,7 @@ ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = Variable)) +
   theme_void() +
   labs(title = "Distribución de Frecuencia por Variable") +
   geom_text(aes(label = paste0(Porcentaje, "%")), 
-            position = position_stack(vjust = 0.5))
+            position = position_stack(vjust = 0.7))
 
 ###5 Presencia de plagas en casas###
 
@@ -92,7 +94,7 @@ conteo_df$Porcentaje <- round((conteo_df$Frecuencia / sum(conteo_df$Frecuencia))
 
 # Crear la gráfica de torta
 ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = Variable)) +
-  geom_bar(stat = "identity", width = 1, color = "white") +
+  geom_bar(stat = "identity", width = 1, color = "black", size = 1) +
   coord_polar("y") +
   theme_void() +
   labs(title = "Preséncia de plagas en las casas") +
@@ -113,13 +115,13 @@ ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = Variable)) +
 #porcentaje_plagas <- sum(datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?` == "Sí") / nrow(datos) * 100
 
 # Calcular el porcentaje de viviendas con cucarachas
-porcentaje_cucarachas <- sum(datos$`¿Cuáles plagas?` == "Cucarachas") / nrow(datos) * 100
+porcentaje_cucarachas <- sum(datos$`Cucarachas?` == "Cucarachas") / nrow(datos) * 100
 
 # Calcular el porcentaje de viviendas con mosquitos
-porcentaje_mosquitos <- sum(datos$...93 == "Mosquitos") / nrow(datos) * 100
+porcentaje_mosquitos <- sum(datos$`Mosquitos?` == "Mosquitos") / nrow(datos) * 100
 
 #caluclo el porcentaje de viviendas con ratas
-porcentaje_ratas <- sum(datos$...94 == "Ratas") / nrow(datos) * 100
+porcentaje_ratas <- sum(datos$`Ratas?` == "Ratas") / nrow(datos) * 100
 
 # Crear un data frame con los resultados
 resultados <- data.frame(
@@ -131,7 +133,7 @@ resultados <- data.frame(
 # Crear la gráfica de barras del porcentaje de presencia de cada plaga
 ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
   geom_bar(stat = "identity",color = "black", fill = "red") +
-  theme_minimal() +
+  theme_bw() +
   labs(title = "Porcentaje de Viviendas con Plagas",
        x = "Tipo de Plaga",
        y = "Porcentaje") +
@@ -147,21 +149,33 @@ ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
 ggplot(datos) +
   aes(x = `¿Cuántos integrantes hay en su vivienda?`) + 
   geom_bar(width = 0.10) +
-  scale_x_continuous() +
-  labs(y = "Cantidad de árboles", 
-       x = "Número de brotes nuevos")+
-  theme_classic()
+  scale_x_continuous(n.breaks = 10) +
+  labs(x = "Número de personas en la misma vivienda",
+       y = "Número de viviendas") +
+  theme_bw()
 
 
 
 ###6 Cant máxima de personas por habitación###
 
+ggplot(datos) +
+  aes(x = `¿Cuál es el número MÁXIMO de personas que duermen en estos dormitorios usualmente?`) + 
+  geom_bar(width = 0.10) +
+  scale_x_continuous(n.breaks = 10) +
+  labs(x = "Personas durmiendo en el mismo dormitorio",
+       y = "Número de viviendas") +
+  theme_bw()
+
 ###7 Precio de alquiler###
 
+
+#Incializo el vector que almacena los conteos de casas con plagas vs sin plagas
+datosAlquiler <- datos[datos$`El lugar que habitan actualmente es:` == 'Alquilado', ]
+
 # Crear el histograma
-ggplot(datos, aes(x = `¿Cuál es el costo actual del mismo?`)) +
-  geom_histogram(binwidth = 50, fill = "blue", color = "black", alpha = 0.7) +
-  theme_minimal() +
-  labs(title = "Distribución de Precios de Alquiler",
-       x = "Precios de Alquiler",
-       y = "Frecuencia")
+ggplot(datosAlquiler, aes(x = `¿Cuál es el costo actual del mismo?`)) +
+  geom_histogram(fill = "skyblue", col = "black", 
+                 breaks = seq(0, 25000, 5000)) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0, 25000, 5000), labels = scales::unit_format(unit = "$")) +
+  labs(x = "Precio", y = "Cantidad de viviendas")
