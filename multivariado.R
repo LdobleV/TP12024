@@ -96,9 +96,10 @@ ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
   labs(title = "Porcentaje de plagas, segun el tipo de desague",
        x = "Tipo de desague",
        y = "Porcentaje de plagas") +
-  geom_text(aes(label = paste0(round(Porcentaje, 1), "%")), vjust = -0.5) +
+  geom_text(aes(label = paste0(round(Porcentaje, 1), "%")), vjust = -0.5) + 
   ylim(0, 100)
 
+###
 
 
 
