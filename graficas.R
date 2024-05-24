@@ -147,6 +147,12 @@ ggsave("Tipos de plagas.png", last_plot(), dpi=600)
 
 ###7 Cantidad de personas por vivienda###
 
+# Calcular la mediana
+mediana_personas_vivienda <- median(`¿Cuántos integrantes hay en su vivienda?`, na.rm = TRUE)
+
+# Calcular el rango intercuartílico
+IQR_personas_vivienda <- IQR(`¿Cuántos integrantes hay en su vivienda?`, na.rm = TRUE)
+
 # Crear la gráfica de bastones
 ggplot(datos) +
   aes(x = `¿Cuántos integrantes hay en su vivienda?`) + 
@@ -161,6 +167,12 @@ ggsave("Cantidad de personas por vivienda.png", last_plot(), dpi=600)
 
 ###8 Cant máxima de personas por habitación###
 
+# Calcular la mediana
+mediana_maxpersonas_habitacion <- median(`¿Cuál es el número MÁXIMO de personas que duermen en estos dormitorios usualmente?`, na.rm = TRUE)
+
+# Calcular el rango intercuartílico
+IQR_maxpersonas_habitacion <- IQR(`¿Cuál es el número MÁXIMO de personas que duermen en estos dormitorios usualmente?`, na.rm = TRUE)
+
 ggplot(datos) +
   aes(x = `¿Cuál es el número MÁXIMO de personas que duermen en estos dormitorios usualmente?`) + 
   geom_bar(width = 0.10) +
@@ -172,6 +184,7 @@ ggplot(datos) +
 ggsave("Personas durmiendo por dormitorio.png", last_plot(), dpi=600)
 
 ###7 Precio de alquiler###
+
 
 
 #Incializo el vector que almacena los conteos de casas con plagas vs sin plagas
@@ -187,4 +200,25 @@ ggplot(datosAlquiler, aes(x = `¿Cuál es el costo actual del mismo?`)) +
 
 ggsave("Precio del alquiler.png", last_plot(), dpi=600)
 
+# Seleccionar la columna de interés y eliminar los valores NA
+`¿Cuál es el costo actual del mismo?` <- datos$`¿Cuál es el costo actual del mismo?`
+`¿Cuál es el costo actual del mismo?` <- na.omit(`¿Cuál es el costo actual del mismo?`)
+
+# Calcular los estadísticos descriptivos
+
+n <- length(`¿Cuál es el costo actual del mismo?`)
+
+promedio <- mean(`¿Cuál es el costo actual del mismo?`)
+
+desvio_estandar <- sd(`¿Cuál es el costo actual del mismo?`)
+
+minimo <- min(`¿Cuál es el costo actual del mismo?`)
+
+primer_cuartil <- quantile(`¿Cuál es el costo actual del mismo?`, 0.25)
+
+mediana <- median(`¿Cuál es el costo actual del mismo?`)
+
+tercer_cuartil <- quantile(`¿Cuál es el costo actual del mismo?`, 0.75)
+
+maximo <- max(`¿Cuál es el costo actual del mismo?`)
 
