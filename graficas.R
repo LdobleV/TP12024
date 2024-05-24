@@ -106,7 +106,7 @@ ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = VariableConPorcentajes)) +
   coord_polar(theta = "y") +
   theme_void() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Porcentaje de presencia de cada desagüe en casas con plagas") +
+  ggtitle("Porcentaje de presencia de plagas por vivienda") +
   guides(fill=guide_legend(title="")) +
   theme(text = element_text(size = 14, family = "Trebuchet MS"))
 
