@@ -10,6 +10,8 @@ loadfonts(device = "win")
 #Veo las fuentes que importe
 fonts()
 
+
+
 ###1 Grafica cercania a basurales###
 
 # Especificar los valores de interés
@@ -22,16 +24,14 @@ conteos <- sapply(valores_interes, function(valor) sum(datos$`¿Hay basurales ce
 # Convertir el resultado a un data frame
 conteo_df <- data.frame(valores = valores_interes, Frecuencia = conteos)
 
-#------ EN ESTE GRAFICO PROBE LAS FUENTES ----------#
 
 # Crear la gráfica de barras
 ggplot(conteo_df, aes(x = valores, y = Frecuencia, order = valores)) +
-  geom_bar(stat = "identity", fill = "skyblue", color = "black", size = 0.5) +
   theme_bw() +
-  theme(text = element_text(family = "Trebuchet MS"))+
-  labs(title = "Frecuencia de Apariciones por cercania a basurales",
-       x = "Cercanía a basurales",
-       y = "Frecuencia")
+  geom_bar(stat = "identity", fill = "skyblue", color = "black", size = 0.5) +
+  ggtitle("Frecuencia de Apariciones por cercania a basurales") +
+  xlab("Cercanía a basurales") + ylab("Frecuencia en viviendas") +
+  theme(text = element_text(size = 14, family = "Trebuchet MS"))
 
 ###2 Grafico Frecuencia de recolección de residuos###
 
@@ -51,7 +51,8 @@ ggplot(conteo_df, aes(x = valores, y = Frecuencia)) +
   theme_bw() +
   labs(title = "Frecuencia de tiempo de recoleccion de basura", 
        x = "Recolecciones por semana",
-       y = "Frecuencia")
+       y = "Frecuencia") +
+  theme(text = element_text(size = 14, family = "Trebuchet MS"))
 
 ###3 Tipo de desagüe###
 
@@ -67,14 +68,20 @@ conteo_df <- data.frame(Variable = valores_interes, Frecuencia = conteos)
 # Calcular porcentajes
 conteo_df$Porcentaje <- round((conteo_df$Frecuencia / sum(conteo_df$Frecuencia)) * 100, 1)
 
+conteo_df$VariableConPorcentajes <- paste0(conteo_df$Variable, ' [ ', (conteo_df$Porcentaje), '% ]')
+
 # Crear la gráfica de torta
-ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = Variable)) +
+ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = VariableConPorcentajes)) +
   geom_bar(stat = "identity", width = 1) +
-  coord_polar("y") +
+  coord_polar(theta = "y") +
   theme_void() +
-  labs(title = "Distribución de Frecuencia por Variable") +
-  geom_text(aes(label = paste0(Porcentaje, "%")), 
-            position = position_stack(vjust = 0.7))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ggtitle("Porcentaje de presencia de cada desagüe en casas con plagas") +
+  guides(fill=guide_legend(title="")) +
+  theme(text = element_text(size = 14, family = "Trebuchet MS"))
+
+ggsave("test.png", last_plot(), dpi=600)
+
 
 ###5 Presencia de plagas en casas###
 
