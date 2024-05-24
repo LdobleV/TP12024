@@ -98,19 +98,17 @@ conteo_df <- data.frame(Variable = c("No", "Sí"), Frecuencia = conteos)
 # Calcular porcentajes
 conteo_df$Porcentaje <- round((conteo_df$Frecuencia / sum(conteo_df$Frecuencia)) * 100, 1)
 
+conteo_df$VariableConPorcentajes <- paste0(conteo_df$Variable, ' [ ', (conteo_df$Porcentaje), '% ]')
+
 # Crear la gráfica de torta
-ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = Variable)) +
-  geom_bar(stat = "identity", width = 1, color = "black", size = 1) +
-  coord_polar("y") +
+ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = VariableConPorcentajes)) +
+  geom_bar(stat = "identity", width = 1, color = "white", size = 1) +
+  coord_polar(theta = "y") +
   theme_void() +
-  labs(title = "Preséncia de plagas en las casas") +
-  theme(legend.position = "") +
-  theme(text = element_text(family = "Trebuchet MS")) +
   theme(plot.title = element_text(hjust = 0.5)) +
-  geom_text(aes(label = paste0(Variable)), 
-            position = position_stack(vjust = 0.5),
-            size = 6) +
-  scale_fill_brewer(palette="Set1")
+  ggtitle("Porcentaje de presencia de cada desagüe en casas con plagas") +
+  guides(fill=guide_legend(title="")) +
+  theme(text = element_text(size = 14, family = "Trebuchet MS"))
 
 ggsave("Plagas.png", last_plot(), dpi=600)
 
