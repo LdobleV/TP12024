@@ -4,23 +4,28 @@ library(dplyr)
 library(extrafont)
 ### Bi variado 
 
+font_import()
+loadfonts(device = "win")
+
+#Veo las fuentes que importe
+fonts()
+
 ###Precio de alquiler y Hacinamieto###
 
 datos <- datos %>%
   mutate(hacinamiento = `¿Cuántos integrantes hay en su vivienda?` / `¿Cuántos ambientes en su vivienda se utilizan como dormitorio?`)
 
 
-#grafica
 ggplot(datos, aes(x=`¿Cuál es el costo actual del mismo?`, y = hacinamiento)) +
   theme_bw() +
   geom_point(color="blue", size = 3) +
   ggtitle("Diagrama de Dispersión") +
   xlab("Precio de Alquiler") +
-  ylab("Hacinamiento")
+  ylab("Personas durmiendo por habitación")
 
+ggsave("Hacinamiento vs Precio del Alquiler.png", last_plot(), dpi=600)
 
 ###desague y plagas###
-attach(datos)
 
 calcular <- function(colTotal, colCond, condColTotal, condColCond) {
   viviendas_que_cumplen_ambas <- datos %>%
@@ -65,13 +70,16 @@ resultados <- data.frame(
 
 # Crear la gráfica de barras del porcentaje de presencia de cada plaga
 ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
-  geom_bar(stat = "identity",color = "black", fill = "skyblue") +
+  geom_bar(stat = "identity",color = "black", size = 1, fill = "skyblue") +
   theme_bw() +
-  labs(title = "Porcentaje de plagas, segun el tipo de desague",
+  labs(title = "Porcentaje de presencia plagas, segun el tipo de desague",
        x = "Tipo de desague",
        y = "Porcentaje de plagas") +
   geom_text(aes(label = paste0(round(Porcentaje, 1), "%")), vjust = -0.5) + 
-  ylim(0, 100)
+  ylim(0, 100) +
+  theme(text = element_text(family = "Trebuchet MS"))
+
+ggsave("Plagas vs desague.png", last_plot(), dpi=600)
 
 ###plagas distancia a basurales###
 
@@ -100,13 +108,16 @@ resultados <- data.frame(
 
 # Crear la gráfica de barras del porcentaje de presencia de cada plaga
 ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
-  geom_bar(stat = "identity",color = "black", fill = "skyblue") +
+  geom_bar(stat = "identity",color = "black", size = 1, fill = "skyblue") +
   theme_bw() +
   labs(title = "Porcentaje de plagas, segun la distancia a basurales",
-       x = "distancia a basurales",
+       x = "Distancia a basurales",
        y = "Porcentaje de plagas") +
-  geom_text(aes(label = paste0(round(Porcentaje, 1), "%")), vjust = -0.5) + 
-  ylim(0, 100)
+  geom_text(aes(label = paste0(round(Porcentaje, 1), "%")), vjust = -0.5) +
+  ylim(0, 100) +
+  theme(text = element_text(family = "Trebuchet MS"))
+
+ggsave("Plagas vs Basurales.png", last_plot(), dpi=600)
 
 
 ###plagas segun timepo de recoleccion###
@@ -140,15 +151,18 @@ resultados <- data.frame(
 
 # Crear la gráfica de barras del porcentaje de presencia de cada plaga
 ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
-  geom_bar(stat = "identity",color = "black", fill = "skyblue") +
+  geom_bar(stat = "identity",color = "black", size = 1, fill = "skyblue") +
   theme_bw() +
   labs(title = "Porcentaje de plagas, segun frecuencia de recoleccion de basura",
-       x = "frecuencia de recoleccion",
-       y = "Porcentaje de plagas") +
+       x = "Frecuencia de recoleccion",
+       y = "Porcentaje de presencia de plagas") +
   geom_text(aes(label = paste0(round(Porcentaje, 1), "%")), vjust = -0.5) + 
-  ylim(0, 100)
+  ylim(0, 100) +
+  theme(text = element_text(family = "Trebuchet MS"))
 
-###
+ggsave("Plagas vs Frecuencia de Recoleccion.png", last_plot(), dpi=600)
+
+### Grafico de presencia de plagas segun precio del alquiler
 
 # Filtrar los datos para eliminar las filas con NA en precio_de_alquiler
 datos1 <- datos %>%
@@ -160,5 +174,8 @@ ggplot(datos1, aes(x = `¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su v
   ggtitle("Precio de Alquiler vs Presencia de Plagas") +
   xlab("Presencia de Plagas") +
   ylab("Precio de Alquiler") +
-  theme_bw()
+  theme_bw() +
+  theme(text = element_text(family = "Trebuchet MS"))
+
+ggsave("Plagas vs Precio del Alquiler.png", last_plot(), dpi=600)
 

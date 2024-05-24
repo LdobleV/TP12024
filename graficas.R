@@ -11,7 +11,6 @@ loadfonts(device = "win")
 fonts()
 
 
-
 ###1 Grafica cercania a basurales###
 
 # Especificar los valores de interés
@@ -33,6 +32,9 @@ ggplot(conteo_df, aes(x = valores, y = Frecuencia, order = valores)) +
   xlab("Cercanía a basurales") + ylab("Frecuencia en viviendas") +
   theme(text = element_text(size = 14, family = "Trebuchet MS"))
 
+ggsave("Cercania a basurales.png", last_plot(), dpi=600)
+
+
 ###2 Grafico Frecuencia de recolección de residuos###
 
 # Especificar los valores de interés
@@ -53,6 +55,8 @@ ggplot(conteo_df, aes(x = valores, y = Frecuencia)) +
        x = "Recolecciones por semana",
        y = "Frecuencia") +
   theme(text = element_text(size = 14, family = "Trebuchet MS"))
+
+ggsave("Frecuencia de recoleccion de residuos.png", last_plot(), dpi=600)
 
 ###3 Tipo de desagüe###
 
@@ -80,12 +84,9 @@ ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = VariableConPorcentajes)) +
   guides(fill=guide_legend(title="")) +
   theme(text = element_text(size = 14, family = "Trebuchet MS"))
 
-ggsave("test.png", last_plot(), dpi=600)
-
+ggsave("Tipo de desague.png", last_plot(), dpi=600)
 
 ###5 Presencia de plagas en casas###
-
-#Movi lo de aca a manipulacion, pq no se, va ahi
 
  
 #Incializo el vector que almacena los conteos de casas con plagas vs sin plagas
@@ -96,8 +97,6 @@ conteo_df <- data.frame(Variable = c("No", "Sí"), Frecuencia = conteos)
 
 # Calcular porcentajes
 conteo_df$Porcentaje <- round((conteo_df$Frecuencia / sum(conteo_df$Frecuencia)) * 100, 1)
-
-#--Aca tambien probe cosas con fuentes y para que se vea mejor no se---
 
 # Crear la gráfica de torta
 ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = Variable)) +
@@ -113,13 +112,9 @@ ggplot(conteo_df, aes(x = "", y = Frecuencia, fill = Variable)) +
             size = 6) +
   scale_fill_brewer(palette="Set1")
 
+ggsave("Plagas.png", last_plot(), dpi=600)
+
 ###6 Tipos de plagas en casas con plagas###
-
-#Tipo de plaga: categórica nominal: bien, faltó explicitar que es de respuesta múltiple. Gráfico de sectores: no es correcto,
-#ya que la suma de las frecuencias de las categorías excede el 100% (justamente por ser de respuesta múltiple). Los gráficos de barras pueden representar las frecuencias porcentuales también.
-
-# Calcular el porcentaje de viviendas con plagas
-#porcentaje_plagas <- sum(datos$`¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?` == "Sí") / nrow(datos) * 100
 
 # Calcular el porcentaje de viviendas con cucarachas
 porcentaje_cucarachas <- sum(datos$`Cucarachas?` == "Cucarachas") / nrow(datos) * 100
@@ -139,7 +134,7 @@ resultados <- data.frame(
 
 # Crear la gráfica de barras del porcentaje de presencia de cada plaga
 ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
-  geom_bar(stat = "identity",color = "black", fill = "red") +
+  geom_bar(stat = "identity",color = "black", size = 1, fill = "skyblue") +
   theme_bw() +
   labs(title = "Porcentaje de Viviendas con Plagas",
        x = "Tipo de Plaga",
@@ -147,10 +142,10 @@ ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
   geom_text(aes(label = paste0(round(Porcentaje, 1), "%")), vjust = -0.5) +
   ylim(0, 100)
 
+ggsave("Tipos de plagas.png", last_plot(), dpi=600)
 
-###5 Cantidad de personas por vivienda###
-##falta mediana y dispercion
 
+###7 Cantidad de personas por vivienda###
 
 # Crear la gráfica de bastones
 ggplot(datos) +
@@ -161,9 +156,10 @@ ggplot(datos) +
        y = "Número de viviendas") +
   theme_bw()
 
+ggsave("Cantidad de personas por vivienda.png", last_plot(), dpi=600)
 
 
-###6 Cant máxima de personas por habitación###
+###8 Cant máxima de personas por habitación###
 
 ggplot(datos) +
   aes(x = `¿Cuál es el número MÁXIMO de personas que duermen en estos dormitorios usualmente?`) + 
@@ -172,6 +168,8 @@ ggplot(datos) +
   labs(x = "Personas durmiendo en el mismo dormitorio",
        y = "Número de viviendas") +
   theme_bw()
+
+ggsave("Personas durmiendo por dormitorio.png", last_plot(), dpi=600)
 
 ###7 Precio de alquiler###
 
@@ -186,3 +184,7 @@ ggplot(datosAlquiler, aes(x = `¿Cuál es el costo actual del mismo?`)) +
   theme_bw() +
   scale_x_continuous(breaks = seq(0, 25000, 5000), labels = scales::unit_format(unit = "$")) +
   labs(x = "Precio", y = "Cantidad de viviendas")
+
+ggsave("Precio del alquiler.png", last_plot(), dpi=600)
+
+
