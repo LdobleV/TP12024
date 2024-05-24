@@ -12,6 +12,7 @@ datos <- datos %>%
 
 #grafica
 ggplot(datos, aes(x=`¿Cuál es el costo actual del mismo?`, y = hacinamiento)) +
+  theme_bw() +
   geom_point(color="blue", size = 3) +
   ggtitle("Diagrama de Dispersión") +
   xlab("Precio de Alquiler") +
@@ -19,14 +20,15 @@ ggplot(datos, aes(x=`¿Cuál es el costo actual del mismo?`, y = hacinamiento)) 
 
 
 ###desague y plagas###
+attach(datos)
 
-calcular <- function(ColTotal, ColCond, CondColTotal, CondColCond) {
+calcular <- function(colTotal, colCond, condColTotal, condColCond) {
   viviendas_que_cumplen_ambas <- datos %>%
-    filter(ColTotal == CondColTotal &  ColCond == CondColCond) %>%
+    filter(colTotal == condColTotal &  colCond == condColCond) %>%
     nrow()
   
   total <- datos %>%
-    filter(ColCond == CondColCond) %>%
+    filter(colTotal == condColTotal) %>%
     nrow()
   
   return((viviendas_que_cumplen_ambas / total) * 100)
@@ -63,8 +65,8 @@ resultados <- data.frame(
 
 # Crear la gráfica de barras del porcentaje de presencia de cada plaga
 ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
-  geom_bar(stat = "identity",color = "black", fill = "blue") +
-  theme_minimal() +
+  geom_bar(stat = "identity",color = "black", fill = "skyblue") +
+  theme_bw() +
   labs(title = "Porcentaje de plagas, segun el tipo de desague",
        x = "Tipo de desague",
        y = "Porcentaje de plagas") +
@@ -98,8 +100,8 @@ resultados <- data.frame(
 
 # Crear la gráfica de barras del porcentaje de presencia de cada plaga
 ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
-  geom_bar(stat = "identity",color = "black", fill = "blue") +
-  theme_minimal() +
+  geom_bar(stat = "identity",color = "black", fill = "skyblue") +
+  theme_bw() +
   labs(title = "Porcentaje de plagas, segun la distancia a basurales",
        x = "distancia a basurales",
        y = "Porcentaje de plagas") +
@@ -138,8 +140,8 @@ resultados <- data.frame(
 
 # Crear la gráfica de barras del porcentaje de presencia de cada plaga
 ggplot(resultados, aes(x = Tipo, y = Porcentaje, fill = Tipo)) +
-  geom_bar(stat = "identity",color = "black", fill = "blue") +
-  theme_minimal() +
+  geom_bar(stat = "identity",color = "black", fill = "skyblue") +
+  theme_bw() +
   labs(title = "Porcentaje de plagas, segun frecuencia de recoleccion de basura",
        x = "frecuencia de recoleccion",
        y = "Porcentaje de plagas") +
@@ -154,10 +156,9 @@ datos1 <- datos %>%
 
 # Crear los boxplots usando ggplot2
 ggplot(datos1, aes(x = `¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?`, y = `¿Cuál es el costo actual del mismo?`, fill = `¿Hay plagas (cucarachas, mosquitos, ratas, etc) en su vivienda y en los alrededores de la misma?`)) +
-  geom_boxplot() +
+  geom_boxplot(width = 0.30, fill = "lightgray", outlier.size = 1) +
   ggtitle("Precio de Alquiler vs Presencia de Plagas") +
   xlab("Presencia de Plagas") +
   ylab("Precio de Alquiler") +
-  scale_fill_manual(values = c("Sí" = "red", "No" = "green")) +
-  theme_minimal()
+  theme_bw()
 
